@@ -25,3 +25,49 @@ END $$
 
 DELIMITER ;
 ```
+
+# Etapa 3: Trigger
+## Crie uma trigger que seja acionada APÓS a inserção de um novo pedido na tabela "Pedidos". A trigger deve calcular o valor total dos pedidos para o cliente correspondente e atualizar um campo "TotalPedidos" na tabela "Clientes" com o valor total. Teste a Trigger inserindo um novo pedido na tabela "Pedidos“.
+
+```SQL
+DELIMITER $$
+
+CREATE TRIGGER CalculaTotalPedidos
+AFTER INSERT ON gerenciamento.pedidos
+FOR EACH ROW
+BEGIN
+    DECLARE total_pedidos DECIMAL(10, 2);
+
+    -- Calcula o valor total dos pedidos para o cliente correspondente
+    SELECT SUM(valor_pedido) INTO total_pedidos
+    FROM gerenciamento.pedidos
+    WHERE clientes_id_clientes = NEW.clientes_id_clientes;
+
+    -- Atualiza o campo TotalPedidos na tabela Clientes
+    UPDATE gerenciamento.clientes
+    SET TotalPedidos = total_pedidos
+    WHERE id_clientes = NEW.clientes_id_clientes;
+END $$
+
+DELIMITER ;
+```
+
+# Etapa 4: View
+## Crie uma view chamada "PedidosClientes" que combina informações das tabelas "Clientes" e "Pedidos" usando JOIN para mostrar os detalhes dos pedidos e os nomes dos clientes.
+
+```SQL
+CREATE VIEW PedidosClientes AS
+SELECT
+    p.id_pedidos,
+    c.nome AS nome_cliente,
+    p.data_pedido,
+    p.descricao,
+    p.valor_pedido
+FROM
+    gerenciamento.pedidos p
+JOIN
+    gerenciamento.clientes c ON p.clientes_id_clientes = c.id_clientes;
+
+SELECT * FROM PedidosClientes;
+
+```
