@@ -71,3 +71,26 @@ JOIN
 SELECT * FROM PedidosClientes;
 
 ```
+
+# Etapa 5: Consulta com JOIN
+## Escreva uma consulta SQL que utiliza JOIN para listar os detalhes dos pedidos de cada cliente, incluindo o nome do cliente e o valor total de seus pedidos. Utilize a view "PedidosClientes" para essa consulta.
+
+```SQL
+SELECT
+    pc.nome_cliente,
+    pc.id_pedidos,
+    pc.data_pedido,
+    pc.descricao,
+    pc.valor_pedido,
+    SUM(pc.valor_pedido) OVER (PARTITION BY pc.nome_cliente) AS total_pedidos_cliente
+FROM
+    PedidosClientes pc;
+
+```
+
+# Pedidos
+![image](https://github.com/GabrielChagasAlves/Sistema-de-Gerenciamento-de-Pedidos/assets/125607847/28824116-9a63-4bb6-91dd-3af1e177772e)
+
+# Clientes
+![image](https://github.com/GabrielChagasAlves/Sistema-de-Gerenciamento-de-Pedidos/assets/125607847/46a36e94-312b-484f-91af-a479e0c3fc8e)
+
